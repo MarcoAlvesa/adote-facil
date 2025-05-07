@@ -39,3 +39,4 @@ jobs:
         working-directory: ./backend
         run: |
           docker compose up
+          docker compose down
