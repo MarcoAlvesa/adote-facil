@@ -1,82 +1,147 @@
-# Projeto Adote Fácil
+# Titulo
 
-## Introdução
+Este repositório descreve um roteiro prático para configuração e uso de um **Servidor de Integração Contínua**. O Objetivo é simular práticas reais do DevOps no contexto de desenvolvimento Web.
 
-O "Adote Fácil" é um sistema voltado para facilitar a adoção de animais. A API provê serviços para gerenciamento de usuários, autenticação, cadastro de animais e gerenciamento de chats entre os usuários. O backend é construído com Node.js e Express, utilizando middlewares para autenticação e tratamento de upload de imagens. O frontend é desenvolvido com Next.js e React, proporcionando uma interface dinâmica e responsiva.
+O GitHub Actions é uma ferramenta que possibilita automatizar fluxos de trabalhos (workflows) de todo software. Neste tutorial, aplicaremos os princípios de CI/CD para testes, build e deploys automatiados, em um contexto real de produção.
 
-## Tecnologias
+## 1. Configurar o GitHub Actions
 
-- Node.js
-- Express
-- Multer (upload de arquivos)
-- Axios (requisições HTTP no frontend)
-- JWT (validação de tokens)
-- Zod (validação dos dados no frontend)
-- React (Next.js no frontend)
-- Prisma (ORM no backend)
-- PostgreSQL (banco de dados)
+### 1.1
 
-## Documentação de rotas da API
+Crie um Token pessoal no GitHub (i) e;  faça um Fork (ii) deste projeto. (i) Para criar um Token, clique no ícone do seu perfil, vá em **Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token**. Marque as opções `repo` e `workflows` para gerar o Token. Gere o token mínimo (7 dias) apenas para este experimento. Copie e guarde esse código (token) para usar quando o GitHub lhe pedir para usar uma senha (password). (ii) Entre no repositório [adote-facil](https://github.com/ArthurEnrique15/adote-facil) e clique no botão **Fork** no canto superior direito na página do projeto no GitHub.
 
-### Rotas de Usuários
+#### Opcional, mas recomendado
 
-- **POST `/users`**
-  Cria um novo usuário.
-  _Exemplo de uso:_ Envio de dados com nome, email e senha para cadastro.
+Leia o README do projeto adote-facil e siga o tutorial de implantação para conhecer e entender o projeto em questão.
 
-- **PATCH `/users`**
-  Atualiza informações do usuário autenticado.
-  _Exemplo de uso:_ Atualização de dados do perfil.
+### 1.2
 
-### Rotas de Autenticação
-
-- **POST `/login`**
-  Autentica um usuário utilizando email e senha. Retorna um token JWT e os dados do usuário em caso de sucesso.
-
-### Rotas de Chats
-
-- **POST `/users/chats/messages`**
-  Envia uma nova mensagem em um chat.
-  _Exemplo de uso:_ Permite que o usuário envie uma mensagem para um chat existente.
-
-- **POST `/users/chats`**
-  Cria um novo chat entre usuários.
-  _Exemplo de uso:_ Inicia uma conversa entre dois ou mais usuários.
-
-- **GET `/users/chats`**
-  Lista todos os chats do usuário autenticado.
-
-- **GET `/users/chats/:chatId`**
-  Recupera os detalhes de um chat específico pelo seu ID.
-
-### Rotas de Animais
-
-- **POST `/animals`**
-  Cria um novo anúncio de animal para adoção.
-  _Exemplo de uso:_ Envio de dados do animal e imagens (até 5 arquivos) utilizando o multer.
-
-- **PATCH `/animals/:id`**
-  Atualiza o status de um animal.
-  _Exemplo de uso:_ Permite alterar informações como disponibilidade para adoção.
-
-- **GET `/animals/available`**
-  Lista os animais disponíveis para adoção.
-  _Exemplo de uso:_ Permite filtragem por gênero, tipo e nome.
-
-- **GET `/animals/user`**
-  Recupera os animais associados ao usuário autenticado.
-
-## Tutorial de implantação
-
-Certifique-se de ter o Docker e o Docker Compose instalados na sua máquina. Antes de iniciar o sistema, crie os arquivos .env nos diretórios /backend e /frontend baseando-se nos respectivos arquivos .env.example.
-
-O arquivo .env.example do backend já contém as variáveis usadas pelo Docker Compose para criar os containers do banco e do backend com os valores corretos, então basta replicá-los. Caso queira, é possível alterá-las também.
-
-As portas de execução do backend e frontend estão hardcoded no arquivo `docker-compose.yml`. O backend executa na porta 8080 e o frontend na porta 3000. É possível alterar estes valores, só tomando cuidado para refletir as alterações nas variáveis de ambiente das APIs.
-
-Para subir os containers, entre na pasta /backend e execute o comando:
-```shell
-docker compose up
+Clone o repositório para sua máquina local, usando o seguinte comando (onde `<USER>` deve ser substituído pelo seu usuário no GitHub):
+```bash
+git clone https://github.com/<USER>/adote-facil.git
 ```
 
-Em seguida, basta acessar a url http://localhost:3000 para ter acesso à plataforma (caso tenha trocado a porta de execução do frontend, altere o 3000 para a porta no qual o frontend está executando).
+Crie em seu diretório clonado, uma pasta `.github`, uma pasta `workflows` dentro de `.github`, e um arquivo `nome.yml` dentro de `workflows`. Se tudo estiver correto terá um caminho `.github/workflows/nome.yml`. Em seu arquivo `nome.yml` copie e cole o seguinte código em seu arquivo .yml:
+
+```yml
+name: ci-cd
+
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Instalar dependências do backend
+        run: |
+          cd backend
+          npm install
+
+      - name: Executar testes unitários com Jest
+        run: |
+          cd backend
+          npm test -- --coverage
+
+  build:
+    needs: unit-test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Configurar Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Configurar Docker QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Build das imagens Docker
+        run: docker compose build
+
+  up-containers:
+    needs: build
+    runs-on: ubuntu-latest
+    env:
+      POSTGRES_DB: adote_facil
+      POSTGRES_HOST: adote-facil-postgres
+      POSTGRES_USER:
+      POSTGRES_PASSWORD:
+      POSTGRES_PORT: 5432
+      POSTGRES_CONTAINER_PORT: 6500
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Criar arquivo .env
+        working-directory: ./backend
+        run: |
+          echo "POSTGRES_DB=${{ env.POSTGRES_DB }}" > .env
+          echo "POSTGRES_HOST=${{ env.POSTGRES_HOST }}" >> .env
+          echo "POSTGRES_USER=${{ env.POSTGRES_USER }}" >> .env
+          echo "POSTGRES_PASSWORD=${{ env.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_PORT=${{ env.POSTGRES_PORT }}" >> .env
+          echo "POSTGRES_CONTAINER_PORT=${{ env.POSTGRES_CONTAINER_PORT }}" >> .env
+
+      - name: Subir containers com Docker Compose
+        working-directory: ./backend
+        run: |
+          docker compose up -d
+          sleep 10  # aguardar containers inicializarem
+          docker compose down
+
+  delivery:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v4
+
+      - name: Gerar arquivo ZIP do projeto completo
+        run: zip -r adote-facil-projeto.zip . -x '*.git*' '*.github*' 'node_modules/*'
+
+      - name: Upload do artefato
+        uses: actions/upload-artifact@v4
+        with:
+          name: adote-facil-projeto
+          path: adote-facil-projeto.zip
+```
+
+### 1.3
+
+Entre no diretório criado (use o comando cd no terminal) ".../adote-facil/¨ e dê um commit nos arquivos criados:
+
+```bash
+git add .
+git commit -m "Configurando o GitHub Actions"
+git push origin main
+```
+
+## 2. Configurando Secrets
+
+Em diversos sistemas, teremos variáveis com informações confidenciais, para mantermos a privacidade delas, o GitHub Actions, possibilita o uso de Secrets.
+Os Secrets são variáveis de ambiente criptografadas que permitem armazenar informações sensíveis, como senhas, chaves de API, etc. de forma segura dentro do GitHub. Em nosso contexto, usaremos o Secrets para inicializar o Banco de Dados.
+
+### 2.1
+
+Em seu repósitorio adote-facil no GitHub, clique no botão **Settings**, em seguida clique em **Secrets and variables** -> **Actions**. Selecione a opção **New repository secret**.
+
+
+### Criar Pull Request com bug
+
+criar branch + criar bug + pull request + vizualizar ações do github actions
+
+### Criar Pull Request com correção
+
+corrigir bug + pull request + vizualizar ações do github actions
+
+### Acessar arquivo criado com o yaml
+
+baixar arquivo + acessa-lo
+
