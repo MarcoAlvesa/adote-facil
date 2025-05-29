@@ -9,16 +9,39 @@ O GitHub Actions permite automatizar fluxos de trabalho (workflows) como testes,
 ## Tarefa #1: Configurar o GitHub Actions
 #### Passo 1
 
-Crie um Token pessoal no GitHub (i) e;  faça um Fork (ii) do projeto adote-facil. (i) Para criar um Token, clique no ícone do seu perfil, vá em **Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token**. Marque as opções `repo` e `workflows` para gerar o Token. Gere o token mínimo (7 dias) apenas para este experimento. Copie e guarde esse código (token) para usar quando o GitHub lhe pedir para usar uma senha (password). 
+Crie um Token pessoal no GitHub (i) e;  faça um Fork (ii) do projeto adote-facil. 
+
+**(i)** Para criar um Token, clique no ícone do seu perfil, vá em **Settings →**
 
 ![image](https://github.com/user-attachments/assets/9b5d64e8-1e8c-4d63-88fd-765b8cd7aeab)
+
+**Developer settings →**
+
 ![image](https://github.com/user-attachments/assets/ea6fc354-d661-46a3-9cf7-cdc59b620c76)
 
+**Personal access tokens →**
+
+![image](https://github.com/user-attachments/assets/ea6fc354-d661-46a3-9cf7-cdc59b620c76)
+
+
+**Tokens (classic)** →
+
 ![image](https://github.com/user-attachments/assets/44645080-395c-4a8b-a37f-adb8148bb3c1)
+
+**Generate new token (classic)**. 
+
 ![image](https://github.com/user-attachments/assets/cafc4d73-2941-40de-a8eb-c111c2beea52)
+
+
+Dê um nome para ele e marque as opções `repo` e `workflows` para gerar o Token. Gere o token mínimo (7 dias) apenas para este experimento. 
+
 ![image](https://github.com/user-attachments/assets/da72310e-d94c-4ea9-9c9f-7053b286fddd)
 
-(ii) Entre no repositório [adote-facil](https://github.com/ArthurEnrique15/adote-facil) e clique no botão **Fork** no canto superior direito na página do projeto no GitHub.
+Copie e guarde esse código (token) para usar quando o GitHub lhe pedir para usar uma senha (password). 
+
+#
+
+**(ii)** Entre no repositório [adote-facil](https://github.com/ArthurEnrique15/adote-facil) e clique no botão **Fork** no canto superior direito na página do projeto no GitHub.
 
 ![image](https://github.com/user-attachments/assets/913b1f5d-2d42-4355-9361-ed6cda99107b)
 
@@ -31,16 +54,7 @@ Clone o repositório para sua máquina local, usando o seguinte comando (onde `<
 git clone https://github.com/<USER>/adote-facil.git
 ```
 
-Em seguida, no diretório clonado, copie o código a seguir para um arquivo com o seguinte nome e caminho: `.github/workflows/experimento-ci-cd.yml`. Isto é, crie diretórios `.github` e depois `workflows` e salve o código abaixo no arquivo `experimento-ci-cd.yml`.
-
-``` bash
-cd adote-facil
-mkdir .github
-cd .github
-mkdir workflows
-cd workflows
-touch experimento-ci-cd.yml
-```
+Em seguida, no diretório clonado, copie o código a seguir para um arquivo com o seguinte nome e caminho: `.github/workflows/experimento-ci-cd.yml`. Isto é, crie diretórios `.github` e depois `workflows` e salve o código abaixo no arquivo `experimento-ci-cd.yml`. Utilize os comandos `mv`, `cd`, `ls`, `mkdir` e `touch` no seu terminal ou use a GUI para criar os diretórios e arquivo.
 
 ```yml
 name: experimento-ci-cd
@@ -134,6 +148,15 @@ jobs:
 
 ```
 
+#### Passo 3
+
+Entre no diretório criado (use o comando cd no terminal) ".../adote-facil/", realize um `add`, um `commit` e um `git push`, ou seja:
+
+```bash
+git add --all
+git commit -m "Configurando o GitHub Actions"
+git push origin main
+```
 
 ## Tarefa #2: Configurar GitHub Secrets
 
@@ -191,9 +214,9 @@ git push origin bug
 
 #### Passo 3
 
-Em seguida, crie um Pull Request (PR) com suas modificações. Para isso, acesse no navegador a seguinte URL, substituindo <USER> pelo seu nome de usuário no GitHub: `https://github.com/<USER>/adotefacil/compare/main...bug`.
+Em seguida, crie um Pull Request (PR) com suas modificações. Para isso, acesse seu repositorio, você verá uma mensagem sugerindo criar um Pull Request da branch 'Bug'. Clique em **Compare & pull request**. Se não aparecer, vá na aba **Pull requests** e clique em **New pull request**
 
-Nessa página, você poderá revisar as alterações feitas. Após conferir, clique no botão Create pull request. Na janela que se abrirá, insira uma breve descrição do PR e confirme a criação clicando novamente em Create pull request.
+Selecione a **Base repository: <USER>/adote-facil**, em seguida **base: main** e **compare: bug** e crie um Pull Request. Nessa página, você poderá revisar as alterações feitas e insirir uma breve descrição do PR e confirme a criação clicando novamente em Create pull request.
 
 Assim que o PR for criado, o pipeline configurado no arquivo experimento-ci-cd.yml será automaticamente iniciada pelo GitHub Actions. Como introduzimos um bug, os testes irão falhar — essa falha será exibida na tela de execução do pipeline. Você pode acompanhar o status da execução acessando a aba Actions do seu repositório.
 
@@ -213,9 +236,11 @@ git push origin fixture
 ```
 Insira seu nome de usuário e senha (Token) do GH se for requerido.
 
-Em seguida, crie novamente um Pull Request (PR) com a correção. Para isso, acesse no navegador a seguinte URL, substituindo <USER> pelo seu nome de usuário no GitHub: `https://github.com/<USER>/adotefacil/compare/main...fixture`.
+Em seguida, crie novamente um Pull Request (PR) com a correção. Para isso, acesse seu repositorio, você verá uma mensagem sugerindo criar um Pull Request da branch 'Bug'. Clique em **Compare & pull request**. Se não aparecer, vá na aba **Pull requests** e clique em **New pull request**
 
-Nessa página, você poderá revisar as alterações realizadas. Depois, clique no botão Create pull request no canto superior direito da tela. Na janela que abrir, insira uma breve descrição do PR e confirme a criação clicando no botão Create pull request no canto inferior direito. Você pode acompanhar o andamento da pipeline acessando a aba Actions do repositório e selecionando o nome do PR em execução.
+Selecione a **Base repository: <USER>/adote-facil**, em seguida **base: main** e **compare: bug** e crie um Pull Request. Nessa página, você poderá revisar as alterações feitas e insirir uma breve descrição do PR e confirme a criação clicando novamente em Create pull request.
+
+Você pode acompanhar o andamento da pipeline acessando a aba Actions do repositório e selecionando o nome do PR em execução.
 
 Após a criação do PR, o GitHub Actions iniciará automaticamente o pipeline, que executará os testes, realizará o build e fará a entrega do artefato gerando um arquivo .zip do projeto. Quando concluído, o arquivo .zip estará disponível para download.
 
