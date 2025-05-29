@@ -133,17 +133,19 @@ jobs:
           path: adote-facil-projeto.zip
 
 ```
-![image](https://github.com/user-attachments/assets/ed3baeb0-3fa5-4d0e-8d0c-003934dde27f)
-![image](https://github.com/user-attachments/assets/3b207f62-1098-4fa0-969a-1adeca9a31ef)
 
 
 ## Tarefa #2: Configurar GitHub Secrets
 
-Em muitos projetos, utilizamos variáveis sensíveis (como senhas e chaves) que não devem ser expostas no código. Para isso, o GitHub Actions permite o uso de Secrets — variáveis de ambiente criptografadas e seguras. Vamos configurar os Secrets para armazenar os dados de conexão com o banco de dados:
+Em muitos projetos, utilizamos variáveis sensíveis (como senhas e chaves) que não devem ser expostas no código. Para isso, o GitHub Actions permite o uso de Secrets — variáveis de ambiente criptografadas e seguras. Para configurar os Secrets para armazenar os dados de conexão com o banco de dados é preciso:
 
 #### Passo 1
 
 Acesse seu repositório adote-facil no GitHub, clique em Settings, depois vá em: **Secrets and variables** → **Actions** → **New repository secret**
+
+![image](https://github.com/user-attachments/assets/0e21ceab-8058-4c60-9b13-103a90ef376c)
+![image](https://github.com/user-attachments/assets/cfd70f52-b185-4b7c-9a4b-780a1b2bd92c)
+![image](https://github.com/user-attachments/assets/fcc27f4a-109f-4808-95ba-cffc0d473c59)
 
 #### Passo 2
 
@@ -157,15 +159,11 @@ Crie dois segredos (secrets) com os seguintes valores:
    - **Name**: `POSTGRES_PASSWORD`
    - **Secret**: `postgres`
 
-Esses valores simulam um cenário de acesso ao banco de dados. Eles serão utilizados automaticamente no workflow `.github/workflows/experimento-ci-cd.yml`.
-
-![image](https://github.com/user-attachments/assets/0e21ceab-8058-4c60-9b13-103a90ef376c)
-![image](https://github.com/user-attachments/assets/cfd70f52-b185-4b7c-9a4b-780a1b2bd92c)
-![image](https://github.com/user-attachments/assets/fcc27f4a-109f-4808-95ba-cffc0d473c59)
+Os valores simulam um cenário de acesso ao banco de dados. Eles serão utilizados automaticamente no workflow `.github/workflows/experimento-ci-cd.yml`.
 
 ## Tarefa #3: Criando um Pull Request (PR) com bug
 
-Vamos introduzir um bug simples em um teste e enviar um PR, para mostrar que ele será rejeitado pelo pipeline CI/CD.
+Este caso simula um cenário onde o código contém um bug, fazendo com que o pipeline Ci/CD falhe e rejeite o merge na main.
 
 #### Passo 1
 
@@ -203,7 +201,7 @@ Em suma, o servidor de CI/CD detectou automaticamente um problema no código env
 
 ## Tarefa #3: Criando um Pull Request (PR) com a correção
 
-Vamos restaurar o arquivo ao seu estado original. Para isso, descomente a linha 92 e exclua a linha 93. Assim, quando criarmos um novo PR, os testes serão executados com sucesso, sem apresentar falhas.
+Para restaurar o arquivo ao seu estado original, descomente a linha 92 e exclua a linha 93. Assim, quando criarmos um novo PR, os testes serão executados com sucesso, sem apresentar falhas.
 
 Após modificar o código, salve o arquivo e crie um novo branch para consertar o bug, realize um `add`, um `commit` e um `push`:
 
