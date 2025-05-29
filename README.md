@@ -11,7 +11,7 @@ O GitHub Actions permite automatizar fluxos de trabalho (workflows) como testes,
 
 Crie um Token pessoal no GitHub (i) e;  faça um Fork (ii) do projeto adote-facil. (i) Para criar um Token, clique no ícone do seu perfil, vá em **Settings → Developer settings → Personal access tokens → Tokens (classic) → Generate new token**. Marque as opções `repo` e `workflows` para gerar o Token. Gere o token mínimo (7 dias) apenas para este experimento. Copie e guarde esse código (token) para usar quando o GitHub lhe pedir para usar uma senha (password). 
 
-![image](https://github.com/user-attachments/assets/8a4ba9fb-00a9-4917-9e8b-785db8d34239)
+![image](https://github.com/user-attachments/assets/9b5d64e8-1e8c-4d63-88fd-765b8cd7aeab)
 ![image](https://github.com/user-attachments/assets/ea6fc354-d661-46a3-9cf7-cdc59b620c76)
 ![image](https://github.com/user-attachments/assets/44645080-395c-4a8b-a37f-adb8148bb3c1)
 ![image](https://github.com/user-attachments/assets/cafc4d73-2941-40de-a8eb-c111c2beea52)
