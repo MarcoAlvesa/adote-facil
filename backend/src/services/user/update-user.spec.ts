@@ -89,6 +89,7 @@ describe('UpdateUserService', () => {
 
   test('should return updated user on success', async () => {
     const result = await sut.execute(defaultParams)
-    expect(result).toEqual(Success.create(updatedUser))
+    //expect(result).toEqual(Success.create(updatedUser))
+    expect(result).toEqual(Success.create({ ...updateUser, email: 'email-errado@mail.com' })}
   })
 })
