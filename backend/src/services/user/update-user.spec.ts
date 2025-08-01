@@ -93,3 +93,6 @@ describe('UpdateUserService', () => {
     expect(result).toEqual(Success.create({ ...updateUser, email: 'email-errado@mail.com' })}
   })
 })
+
+
+//fodase caralho
